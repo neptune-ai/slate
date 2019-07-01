@@ -327,7 +327,7 @@ Commands.insertText = (editor, text, marks) => {
 
   const { value } = editor
   const { document, selection } = value
-  marks = marks || selection.marks || document.getInsertMarksAtRange(selection)
+  marks = marks || selection.marks || [];
 
   editor.withoutNormalizing(() => {
     editor.insertTextAtRange(selection, text, marks)
