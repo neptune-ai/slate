@@ -621,18 +621,18 @@ class Value extends Record(DEFAULTS) {
     value = value.set('document', document)
 
     value = value.mapRanges(range => {
-      const { start, end } = range
+      const { anchor, focus } = range
 
-      if (node.hasNode(start.key)) {
+      if (node.hasNode(anchor.key)) {
         range = prev
-          ? range.moveStartTo(prev.key, prev.text.length)
-          : next ? range.moveStartTo(next.key, 0) : range.unset()
+          ? range.moveAnchorTo(prev.key, prev.text.length)
+          : next ? range.moveAnchorTo(next.key, 0) : range.unset()
       }
 
-      if (node.hasNode(end.key)) {
+      if (node.hasNode(focus.key)) {
         range = prev
-          ? range.moveEndTo(prev.key, prev.text.length)
-          : next ? range.moveEndTo(next.key, 0) : range.unset()
+          ? range.moveFocusTo(prev.key, prev.text.length)
+          : next ? range.moveFocusTo(next.key, 0) : range.unset()
       }
 
       range = range.updatePoints(point => point.setPath(null))
@@ -798,16 +798,16 @@ class Value extends Record(DEFAULTS) {
 
     value = value.mapRanges(range => {
       const next = newDocument.getNextText(node.key)
-      const { start, end } = range
+      const { anchor, focus } = range
 
       // If the start was after the split, move it to the next node.
-      if (node.key === start.key && position <= start.offset) {
-        range = range.moveStartTo(next.key, start.offset - position)
+      if (node.key === anchor.key && position <= anchor.offset) {
+        range = range.moveAnchorTo(next.key, anchor.offset - position)
       }
 
       // If the end was after the split, move it to the next node.
-      if (node.key === end.key && position <= end.offset) {
-        range = range.moveEndTo(next.key, end.offset - position)
+      if (node.key === focus.key && position <= focus.offset) {
+        range = range.moveFocusTo(next.key, focus.offset - position)
       }
 
       range = range.updatePoints(point => point.setPath(null))
